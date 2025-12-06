@@ -124,7 +124,7 @@ export default function AIScriptGenerator({
           {/* Topic Input */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              What&apos;s your video about?
+              What{"'"}s your video about?
             </label>
             <input
               type="text"

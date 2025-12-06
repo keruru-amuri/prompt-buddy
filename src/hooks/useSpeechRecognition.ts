@@ -115,18 +115,17 @@ export function useSpeechRecognition({
   }, [voiceCommands]);
 
   // Calculate speaking rate (words per minute)
-  const calculateSpeakingRate = useCallback((newWordCount: number) => {
+  const calculateSpeakingRate = useCallback(() => {
     const now = Date.now();
     
     if (startTimeRef.current === 0) {
       startTimeRef.current = now;
-      wordCountRef.current = newWordCount;
       return 0;
     }
 
     const elapsedMinutes = (now - startTimeRef.current) / 60000;
     
-    if (elapsedMinutes > 0) {
+    if (elapsedMinutes > 0 && wordCountRef.current > 0) {
       const wpm = Math.round(wordCountRef.current / elapsedMinutes);
       return wpm;
     }
@@ -171,13 +170,15 @@ export function useSpeechRecognition({
       }
 
       // Calculate speaking rate based on word count
-      const words = currentTranscript.split(/\s+/).filter(w => w.length > 0);
-      wordCountRef.current += words.length;
-      
-      const wpm = calculateSpeakingRate(words.length);
-      if (wpm > 0) {
-        setSpeakingRate(wpm);
-        onSpeakingRateChange?.(wpm);
+      if (finalTranscript) {
+        const words = finalTranscript.split(/\s+/).filter(w => w.length > 0);
+        wordCountRef.current += words.length;
+        
+        const wpm = calculateSpeakingRate();
+        if (wpm > 0) {
+          setSpeakingRate(wpm);
+          onSpeakingRateChange?.(wpm);
+        }
       }
 
       onTranscript?.(currentTranscript);
