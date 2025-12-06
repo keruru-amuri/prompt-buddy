@@ -14,7 +14,7 @@ An AI-powered teleprompter application that works seamlessly on both mobile and 
 
 ## Tech Stack
 
-- **Framework**: [Next.js 14+](https://nextjs.org/) with App Router
+- **Framework**: [Next.js 16](https://nextjs.org/) with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Icons**: Lucide React

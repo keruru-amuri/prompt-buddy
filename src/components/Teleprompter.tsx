@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface TeleprompterProps {
   text: string;
@@ -19,9 +19,9 @@ export default function Teleprompter({
 }: TeleprompterProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
   const animationRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number>(0);
+  const scrollPositionRef = useRef<number>(0);
   const speedRef = useRef(speed);
   const isPlayingRef = useRef(isPlaying);
 
@@ -44,7 +44,10 @@ export default function Teleprompter({
       
       if (elapsed > 16) { // ~60fps
         const scrollAmount = (speedRef.current * elapsed) / 100;
-        setScrollPosition((prev) => prev + scrollAmount);
+        scrollPositionRef.current += scrollAmount;
+        if (containerRef.current) {
+          containerRef.current.scrollTop = scrollPositionRef.current;
+        }
         lastTimeRef.current = timestamp;
       }
 
@@ -66,12 +69,6 @@ export default function Teleprompter({
       }
     };
   }, [isPlaying]);
-
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollTop = scrollPosition;
-    }
-  }, [scrollPosition]);
 
   return (
     <div className="relative w-full h-full">
